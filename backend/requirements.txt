@@ -1,0 +1,14 @@
+deepface
+tensorflow>=2.13.0
+tf-keras
+opencv-python
+numpy
+matplotlib
+requests
+pillow
+scikit-learn
+flask
+flask-cors
+flask-jwt-extended
+pymongo
+python-dotenv

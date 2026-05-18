@@ -5,7 +5,7 @@ import ThreeOrb from './ThreeOrb';
 
 const Hero = ({ currentEmotion, onStartClick }) => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <section className="relative w-screen min-h-screen flex items-center justify-center pt-20 overflow-hidden left-0">
       {/* 3D Orb Background Elements */}
       <ThreeOrb currentEmotion={currentEmotion} />
 

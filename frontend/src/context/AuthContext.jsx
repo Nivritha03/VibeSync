@@ -17,10 +17,10 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const res = await axios.get(`${API_URL}/auth/me`, {
+          const res = await axios.get(`${API_URL}/profile`, {
             headers: { Authorization: `Bearer ${token}` }
           });
-          setUser(res.data.email);
+          setUser(res.data);
         } catch (error) {
           console.error("Token invalid or expired", error);
           localStorage.removeItem('token');
@@ -33,18 +33,18 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+      const res = await axios.post(`${API_URL}/login`, { email, password });
       localStorage.setItem('token', res.data.access_token);
-      setUser(res.data.email);
+      setUser(res.data);
       return { success: true };
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Login failed' };
     }
   };
 
-  const register = async (email, password) => {
+  const register = async (name, email, password) => {
     try {
-      await axios.post(`${API_URL}/auth/register`, { email, password });
+      await axios.post(`${API_URL}/signup`, { name, email, password });
       // Log them in immediately after register
       return await login(email, password);
     } catch (error) {

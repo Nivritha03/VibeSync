@@ -18,7 +18,7 @@ function HomePage({ openAuthModal }) {
   };
 
   return (
-    <main className="relative z-10 flex flex-col items-center">
+    <main className="relative z-10 flex flex-col w-screen min-h-screen">
       <Hero onStartClick={handleStartDetecting} />
       
       <section className="py-20 text-center flex flex-col items-center w-full px-6 sm:px-16 lg:px-32">

@@ -34,7 +34,7 @@ function App() {
 
   return (
     <Router>
-    <div className="w-screen min-h-screen selection:bg-primary/30 text-white overflow-x-hidden bg-background m-0 p-0 relative">
+      <div className="w-screen min-h-screen overflow-x-hidden selection:bg-primary/30 text-white bg-background m-0 p-0 relative">
         <Navbar onLoginClick={openAuthModal} />
         <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
         
@@ -47,7 +47,7 @@ function App() {
                 <AppPage />
               </ProtectedRoute>
             } 
-          />
+            />
           <Route 
             path="/profile" 
             element={
@@ -55,7 +55,7 @@ function App() {
                 <Profile />
               </ProtectedRoute>
             } 
-          />
+            />
           <Route 
             path="/integrations" 
             element={
@@ -63,7 +63,7 @@ function App() {
                 <IntegrationSettings />
               </ProtectedRoute>
             } 
-          />
+            />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         

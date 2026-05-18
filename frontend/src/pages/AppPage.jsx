@@ -38,7 +38,7 @@ const AppPage = () => {
         />
       </div>
 
-      <div className="w-full px-6 sm:px-16 lg:px-32 space-y-12">
+      <div className="w-screen px-6 sm:px-16 lg:px-32 space-y-12">
         {/* Hero Section */}
         <header className="text-center space-y-4 px-4 overflow-hidden">
           <motion.div
@@ -55,7 +55,7 @@ const AppPage = () => {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-6xl font-black text-white tracking-tight"
           >
-            Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-neonBlue">{user?.split('@')[0] || user}</span>
+            Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-neonBlue">{user?.name || user?.email?.split('@')[0] || 'User'}</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

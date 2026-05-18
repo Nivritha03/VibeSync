@@ -49,23 +49,31 @@ users_collection = db["users"]
 history_collection = db["history"]
 
 # ─── Auth Endpoints ─────────────────────────────────────────────────
-@app.route("/auth/register", methods=["POST"])
+@app.route("/signup", methods=["POST"])
+@app.route("/auth/register", methods=["POST"]) # Keep alias for backward compat
 def register():
     data = request.json
+    name = data.get("name")
     email = data.get("email")
     password = data.get("password")
 
-    if not email or not password:
-        return jsonify({"message": "Email and password required"}), 400
+    if not name or not email or not password:
+        return jsonify({"message": "Name, email and password required"}), 400
 
     if users_collection.find_one({"email": email}):
         return jsonify({"message": "User already exists"}), 409
 
     hashed = generate_password_hash(password)
-    users_collection.insert_one({"email": email, "password_hash": hashed})
+    users_collection.insert_one({
+        "name": name,
+        "email": email, 
+        "password_hash": hashed,
+        "createdAt": datetime.utcnow()
+    })
 
     return jsonify({"message": "Registration successful"}), 201
 
+@app.route("/login", methods=["POST"])
 @app.route("/auth/login", methods=["POST"])
 def login():
     data = request.json
@@ -74,16 +82,30 @@ def login():
 
     user = users_collection.find_one({"email": email})
     if user and check_password_hash(user["password_hash"], password):
+        # Include name in the identity or as extra data
         access_token = create_access_token(identity=email)
-        return jsonify({"access_token": access_token, "email": email}), 200
+        return jsonify({
+            "access_token": access_token, 
+            "email": email,
+            "name": user.get("name", email.split('@')[0])
+        }), 200
 
     return jsonify({"message": "Invalid credentials"}), 401
 
+@app.route("/profile", methods=["GET"])
 @app.route("/auth/me", methods=["GET"])
 @jwt_required()
 def me():
     current_user_email = get_jwt_identity()
-    return jsonify({"email": current_user_email}), 200
+    user = users_collection.find_one({"email": current_user_email}, {"_id": 0, "password_hash": 0})
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+    return jsonify(user), 200
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    # Frontend handles JWT removal. Backend could blacklist if needed.
+    return jsonify({"message": "Logged out successfully"}), 200
 
 
 # ─── Core Application Endpoints ─────────────────────────────────────

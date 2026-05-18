@@ -111,9 +111,9 @@ const Navbar = ({ onLoginClick }) => {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
                     <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold">
-                        {user.charAt(0).toUpperCase()}
+                        {(user?.name || 'U').charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">{user}</span>
+                    <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">{user?.name || user?.email?.split('@')[0]}</span>
                   </div>
                   <button 
                     onClick={() => {

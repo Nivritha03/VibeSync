@@ -33,7 +33,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_URL}/login`, { email, password });
+      const res = await axios.post(`${API_URL}/login`, 
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
       localStorage.setItem('token', res.data.access_token);
       setUser(res.data);
       return { success: true };
@@ -44,7 +47,10 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      await axios.post(`${API_URL}/signup`, { name, email, password });
+      await axios.post(`${API_URL}/signup`, 
+        { name, email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
       // Log them in immediately after register
       return await login(email, password);
     } catch (error) {

@@ -34,7 +34,7 @@ function App() {
 
   return (
     <Router>
-      <div className="w-full min-h-screen selection:bg-primary/30 text-white overflow-hidden bg-background m-0 p-0 relative">
+    <div className="w-screen min-h-screen selection:bg-primary/30 text-white overflow-x-hidden bg-background m-0 p-0 relative">
         <Navbar onLoginClick={openAuthModal} />
         <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
         

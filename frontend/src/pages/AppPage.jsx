@@ -17,7 +17,7 @@ const AppPage = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 relative bg-black">
+    <div className="min-h-screen pt-24 pb-20 relative bg-black w-full overflow-x-hidden m-0">
       {/* Dynamic Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10">
         <motion.div 

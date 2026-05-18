@@ -10,9 +10,9 @@ const Hero = ({ currentEmotion, onStartClick }) => {
       <ThreeOrb currentEmotion={currentEmotion} />
 
       {/* Dynamic Background Elements */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px] animate-pulse-slow" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neonBlue/20 rounded-full blur-[128px] animate-pulse-slow" style={{ animationDelay: '2s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pinkGlow/10 rounded-full blur-[150px]" />
+      <div className="absolute top-0 left-[-20%] w-[150vw] h-[150vh] bg-primary/10 rounded-full blur-[180px] animate-pulse-slow -z-10" />
+      <div className="absolute bottom-[-30%] right-[-20%] w-[150vw] h-[150vh] bg-neonBlue/10 rounded-full blur-[180px] animate-pulse-slow -z-10" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vh] bg-pinkGlow/5 rounded-full blur-[250px] -z-10" />
 
       {/* Floating Particles (Simplified for example) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -39,7 +39,7 @@ const Hero = ({ currentEmotion, onStartClick }) => {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 w-full px-6 sm:px-16 lg:px-32 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

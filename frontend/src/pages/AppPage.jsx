@@ -38,7 +38,7 @@ const AppPage = () => {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-12">
+      <div className="w-full px-6 sm:px-16 lg:px-32 space-y-12">
         {/* Hero Section */}
         <header className="text-center space-y-4 px-4 overflow-hidden">
           <motion.div

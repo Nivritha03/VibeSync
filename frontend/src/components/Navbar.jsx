@@ -81,7 +81,7 @@ const Navbar = ({ onLoginClick }) => {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${
       scrolled ? 'bg-black/90 backdrop-blur-xl py-3 border-white/5' : 'bg-transparent py-5 border-transparent'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-6 sm:px-12 lg:px-24">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer group" onClick={() => navigate('/')}>

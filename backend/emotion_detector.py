@@ -28,12 +28,12 @@ def _predict_single_frame(frame):
         # Preprocessing: Normalize brightness and contrast to handle poor lighting
         # DeepFace does some of this, but manual normalization helps RetinaFace
         
-        # Switch to retinaface for highest possible accuracy
+        # Switch to opencv for lower memory usage and faster processing on free tier
         results = DeepFace.analyze(
             img_path=frame, 
             actions=['emotion'],
             enforce_detection=False, 
-            detector_backend='retinaface',
+            detector_backend='opencv',
             silent=True
         )
         

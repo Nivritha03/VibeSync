@@ -23,8 +23,13 @@ logger = logging.getLogger(__name__)
 
 # ─── Flask app & Config ─────────────────────────────────────────────
 app = Flask(__name__)
-# Enable CORS - using '*' temporarily to ensure registration works regardless of environment variable setup
-CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Enable CORS with more explicit settings to handle all frontend origins and headers
+CORS(app, resources={r"/*": {
+    "origins": "*",
+    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Origin"]
+}})
 
 @app.before_request
 def log_request_info():

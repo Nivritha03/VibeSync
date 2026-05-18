@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Calendar, Music, Sliders } from 'lucide-react';
+import { Sparkles, Calendar, Music, Sliders, Activity } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import EmotionDetector from '../components/EmotionDetector';
 import MusicRecommendations from '../components/MusicRecommendations';

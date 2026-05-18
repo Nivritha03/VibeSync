@@ -1,10 +1,14 @@
 import requests
 import logging
 import random
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-CLIENT_ID = "0d1a003b"
+CLIENT_ID = os.environ.get("JAMENDO_CLIENT_ID", "0d1a003b")
 JAMENDO_BASE = "https://api.jamendo.com/v3.0/tracks/"
 REQUEST_TIMEOUT = 10  # seconds
 

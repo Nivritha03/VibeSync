@@ -115,26 +115,49 @@ const AppPage = () => {
           )}
         </AnimatePresence>
 
-        {/* Analytics Section - Only visible after at least one recommendation */}
-        {recommendation && (
-          <motion.section 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            id="analytics" 
-            className="mt-20 pt-10 border-t border-white/5"
-          >
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2 rounded-xl bg-primary/20 text-primary">
-                <Calendar className="w-6 h-6" />
-              </div>
-              <div>
-                  <h2 className="text-3xl font-bold text-white tracking-tight">Personalized Mood Timeline</h2>
-                  <p className="text-gray-500">Tracking your emotional journey through sound</p>
-              </div>
+        {/* Analytics Section - Anchor always exists for smooth navigation */}
+        <section 
+          id="analytics" 
+          className="mt-20 pt-10 border-t border-white/5 min-h-[400px]"
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2 rounded-xl bg-primary/20 text-primary">
+              <Calendar className="w-6 h-6" />
             </div>
-            <AnalyticsDashboard />
-          </motion.section>
-        )}
+            <div>
+                <h2 className="text-3xl font-bold text-white tracking-tight">Personalized Mood Timeline</h2>
+                <p className="text-gray-500">Tracking your emotional journey through sound</p>
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {recommendation ? (
+              <motion.div
+                key="dashboard"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <AnalyticsDashboard />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="placeholder"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="py-20 flex flex-col items-center justify-center text-center glass rounded-[3rem] border border-white/5"
+              >
+                <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
+                  <Activity className="w-10 h-10 text-gray-600" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">No mood data yet</h3>
+                <p className="text-gray-400 max-w-sm mx-auto">
+                  Start your first emotion detection to unlock your personalized musical journey timeline.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
       </div>
     </div>
   );

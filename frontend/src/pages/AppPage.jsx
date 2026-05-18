@@ -115,19 +115,26 @@ const AppPage = () => {
           )}
         </AnimatePresence>
 
-        {/* Analytics Section */}
-        <section id="analytics" className="mt-20 pt-10 border-t border-white/5">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 rounded-xl bg-primary/20 text-primary">
-              <Calendar className="w-6 h-6" />
+        {/* Analytics Section - Only visible after at least one recommendation */}
+        {recommendation && (
+          <motion.section 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            id="analytics" 
+            className="mt-20 pt-10 border-t border-white/5"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2 rounded-xl bg-primary/20 text-primary">
+                <Calendar className="w-6 h-6" />
+              </div>
+              <div>
+                  <h2 className="text-3xl font-bold text-white tracking-tight">Personalized Mood Timeline</h2>
+                  <p className="text-gray-500">Tracking your emotional journey through sound</p>
+              </div>
             </div>
-            <div>
-                <h2 className="text-3xl font-bold text-white tracking-tight">Personalized Mood Timeline</h2>
-                <p className="text-gray-500">Tracking your emotional journey through sound</p>
-            </div>
-          </div>
-          <AnalyticsDashboard />
-        </section>
+            <AnalyticsDashboard />
+          </motion.section>
+        )}
       </div>
     </div>
   );

@@ -23,8 +23,24 @@ logger = logging.getLogger(__name__)
 
 # ─── Flask app & Config ─────────────────────────────────────────────
 app = Flask(__name__)
-# Enable CORS for all routes and origins to ensure Vercel -> Render communication works
-CORS(app, resources={r"/*": {"origins": "*"}})
+# Enable CORS robustly using environment variables for the frontend URL
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            FRONTEND_URL,
+            "http://localhost:5173",
+            "http://127.0.0.1:5173"
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
+
+@app.before_request
+def log_request_info():
+    logger.info('Headers: %s', request.headers)
+    logger.info('Body: %s', request.get_data())
 
 # Database / Auth Config
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET', 'A_VERY_SECRET_KEY_REPLACE_IN_PROD')

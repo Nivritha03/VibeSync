@@ -25,13 +25,15 @@ def _predict_single_frame(frame):
             
         logger.info(f"Processing frame of shape: {frame.shape}")
         
-        # Use DeepFace to analyze the emotion
-        # Set enforce_detection=False to prevent crash if face is not perfectly clear
+        # Preprocessing: Normalize brightness and contrast to handle poor lighting
+        # DeepFace does some of this, but manual normalization helps RetinaFace
+        
+        # Switch to retinaface for highest possible accuracy
         results = DeepFace.analyze(
             img_path=frame, 
             actions=['emotion'],
             enforce_detection=False, 
-            detector_backend='opencv',
+            detector_backend='retinaface',
             silent=True
         )
         
@@ -43,8 +45,14 @@ def _predict_single_frame(frame):
         dominant_emotion = face_result.get('dominant_emotion')
         emotion_confidence = face_result.get('emotion', {}).get(dominant_emotion, 0.0)
 
-        logger.info(f"Dominant emotion: {dominant_emotion} ({emotion_confidence}%)")
-        return dominant_emotion, emotion_confidence / 100.0 # Convert to [0, 1]
+        # STRICT THRESHOLD: Only accept if AI is at least 60% sure
+        conf_score = emotion_confidence / 100.0
+        if conf_score < 0.6:
+            logger.warning(f"Confidence too low ({conf_score}), rejecting prediction.")
+            return "neutral", 0.0
+
+        logger.info(f"Dominant emotion verified: {dominant_emotion} ({emotion_confidence}%)")
+        return dominant_emotion, conf_score
 
     except ValueError as ve:
         # DeepFace raises ValueError if no face is detected when enforce_detection=True

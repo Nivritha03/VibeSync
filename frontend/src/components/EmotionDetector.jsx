@@ -211,7 +211,10 @@ const EmotionDetector = ({ onEmotionDetected }) => {
                         </p>
                         {!isDetecting && isCameraActive && (
                             <button 
-                                onClick={detectEmotion}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    detectEmotion();
+                                }}
                                 className="mt-4 px-4 py-2 bg-primary/20 hover:bg-primary/40 text-primary text-xs font-bold rounded-lg border border-primary/30 transition-all"
                             >
                                 SCAN NOW

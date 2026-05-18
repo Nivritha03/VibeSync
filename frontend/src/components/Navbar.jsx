@@ -56,16 +56,7 @@ const Navbar = ({ onLoginClick }) => {
     }
 
     if (item.id === 'analytics') {
-      if (pathname === '/app') {
-          const element = document.getElementById('analytics');
-          if (element) element.scrollIntoView({ behavior: 'smooth' });
-      } else {
-          navigate('/app');
-          setTimeout(() => {
-              const element = document.getElementById('analytics');
-              if (element) element.scrollIntoView({ behavior: 'smooth' });
-          }, 500);
-      }
+      navigate('/app');
       return;
     }
 

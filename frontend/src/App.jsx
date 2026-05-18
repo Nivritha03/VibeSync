@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import ScrollToTop from './components/ScrollToTop';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -34,6 +35,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="w-screen min-h-screen overflow-x-hidden selection:bg-primary/30 text-white bg-background m-0 p-0 relative">
         <Navbar onLoginClick={openAuthModal} />
         <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />

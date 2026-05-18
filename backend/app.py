@@ -23,14 +23,25 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Basic CORS initialization, additional headers added in after_request below
-CORS(app)
+# DEFINITIVE CORS FIX 
+CORS(
+    app,
+    resources={
+        r"/*": {
+            "origins": [
+                "http://localhost:5173",
+                "https://vibe-sync-ebon.vercel.app"
+            ]
+        }
+    },
+    supports_credentials=True
+)
 
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
     return response
 
 @app.before_request
@@ -61,8 +72,8 @@ users_collection = db["users"]
 history_collection = db["history"]
 
 # ─── Auth Endpoints ─────────────────────────────────────────────────
-@app.route("/signup", methods=["POST"])
-@app.route("/auth/register", methods=["POST"]) # Keep alias for backward compat
+@app.route("/signup", methods=["POST", "OPTIONS"])
+@app.route("/auth/register", methods=["POST", "OPTIONS"]) # Keep alias for backward compat
 def register():
     data = request.json
     name = data.get("name")
@@ -86,8 +97,8 @@ def register():
 
     return jsonify({"message": "Registration successful"}), 201
 
-@app.route("/login", methods=["POST"])
-@app.route("/auth/login", methods=["POST"])
+@app.route("/login", methods=["POST", "OPTIONS"])
+@app.route("/auth/login", methods=["POST", "OPTIONS"])
 def login():
     data = request.json
     email = data.get("email")
@@ -105,8 +116,8 @@ def login():
 
     return jsonify({"message": "Invalid credentials"}), 401
 
-@app.route("/profile", methods=["GET"])
-@app.route("/auth/me", methods=["GET"])
+@app.route("/profile", methods=["GET", "OPTIONS"])
+@app.route("/auth/me", methods=["GET", "OPTIONS"])
 @jwt_required()
 def me():
     current_user_email = get_jwt_identity()
@@ -141,7 +152,7 @@ def health():
     return jsonify({"status": "healthy"})
 
 
-@app.route("/detect-emotion", methods=["POST"])
+@app.route("/detect-emotion", methods=["POST", "OPTIONS"])
 @jwt_required()
 def detect():
     try:
@@ -214,7 +225,7 @@ def detect():
         }), 500
 
 
-@app.route("/analytics/history", methods=["GET"])
+@app.route("/analytics/history", methods=["GET", "OPTIONS"])
 @jwt_required()
 def get_history():
     try:

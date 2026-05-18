@@ -21,15 +21,17 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ─── Flask app & Config ─────────────────────────────────────────────
 app = Flask(__name__)
 
-# Enable CORS with more explicit settings to handle all frontend origins and headers
-CORS(app, resources={r"/*": {
-    "origins": "*",
-    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Origin"]
-}})
+# Basic CORS initialization, additional headers added in after_request below
+CORS(app)
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 @app.before_request
 def log_request_info():

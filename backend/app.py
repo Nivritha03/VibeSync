@@ -23,26 +23,19 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# DEFINITIVE CORS FIX 
+# DEFINITIVE PRODUCTION CORS SETUP
 CORS(
     app,
     resources={
         r"/*": {
             "origins": [
-                "http://localhost:5173",
-                "https://vibe-sync-ebon.vercel.app"
+                "https://vibe-sync-ebon.vercel.app",
+                "http://localhost:5173"
             ]
         }
     },
     supports_credentials=True
 )
-
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
-    return response
 
 @app.before_request
 def log_request_info():

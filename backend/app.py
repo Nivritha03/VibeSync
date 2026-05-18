@@ -68,46 +68,84 @@ history_collection = db["history"]
 @app.route("/signup", methods=["POST", "OPTIONS"])
 @app.route("/auth/register", methods=["POST", "OPTIONS"]) # Keep alias for backward compat
 def register():
-    data = request.json
-    name = data.get("name")
-    email = data.get("email")
-    password = data.get("password")
+    print("Signup route hit")
+    try:
+        data = request.get_json()
+        print("Received data:", data)
 
-    if not name or not email or not password:
-        return jsonify({"message": "Name, Email and Password are required"}), 400
-    
-    # Check if user already exists
-    if users_collection.find_one({"email": email}):
-        return jsonify({"message": "User already exists"}), 400
+        if not data:
+            return jsonify({"success": False, "message": "No data received"}), 400
 
-    hashed = generate_password_hash(password)
-    users_collection.insert_one({
-        "name": name,
-        "email": email, 
-        "password_hash": hashed,
-        "createdAt": datetime.utcnow()
-    })
+        name = data.get("name")
+        email = data.get("email")
+        password = data.get("password")
 
-    return jsonify({"message": "Registration successful"}), 201
+        print(f"Name: {name}, Email: {email}")
+
+        if not name or not email or not password:
+            return jsonify({"success": False, "message": "Name, Email and Password are required"}), 400
+        
+        # Check if user already exists
+        if users_collection.find_one({"email": email}):
+            return jsonify({"success": False, "message": "User already exists"}), 400
+
+        hashed = generate_password_hash(password)
+        users_collection.insert_one({
+            "name": name,
+            "email": email, 
+            "password_hash": hashed,
+            "createdAt": datetime.utcnow()
+        })
+
+        return jsonify({
+            "success": True,
+            "message": "Registration successful"
+        }), 201
+
+    except Exception as e:
+        print("SIGNUP ERROR:", str(e))
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 
 @app.route("/login", methods=["POST", "OPTIONS"])
 @app.route("/auth/login", methods=["POST", "OPTIONS"])
 def login():
-    data = request.json
-    email = data.get("email")
-    password = data.get("password")
+    print("Login route hit")
+    try:
+        data = request.get_json()
+        print("Received data:", data)
 
-    user = users_collection.find_one({"email": email})
-    if user and check_password_hash(user["password_hash"], password):
-        # Include name in the identity or as extra data
-        access_token = create_access_token(identity=email)
+        if not data:
+            return jsonify({"success": False, "message": "No data received"}), 400
+
+        email = data.get("email")
+        password = data.get("password")
+
+        print(f"Login attempt for: {email}")
+
+        user = users_collection.find_one({"email": email})
+        if user and check_password_hash(user["password_hash"], password):
+            access_token = create_access_token(identity=email)
+            print(f"Login successful for: {email}")
+            return jsonify({
+                "success": True,
+                "access_token": access_token, 
+                "email": email,
+                "name": user.get("name", email.split('@')[0])
+            }), 200
+
+        print(f"Login failed: Invalid credentials for {email}")
+        return jsonify({"success": False, "message": "Invalid credentials"}), 401
+        
+    except Exception as e:
+        print("LOGIN ERROR:", str(e))
         return jsonify({
-            "access_token": access_token, 
-            "email": email,
-            "name": user.get("name", email.split('@')[0])
-        }), 200
-
-    return jsonify({"message": "Invalid credentials"}), 401
+            "success": False, 
+            "message": "Login failed due to server error",
+            "error": str(e)
+        }), 500
 
 @app.route("/profile", methods=["GET", "OPTIONS"])
 @app.route("/auth/me", methods=["GET", "OPTIONS"])

@@ -23,24 +23,13 @@ logger = logging.getLogger(__name__)
 
 # ─── Flask app & Config ─────────────────────────────────────────────
 app = Flask(__name__)
-# Enable CORS robustly using environment variables for the frontend URL
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            FRONTEND_URL,
-            "http://localhost:5173",
-            "http://127.0.0.1:5173"
-        ],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
+# Enable CORS - using '*' temporarily to ensure registration works regardless of environment variable setup
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.before_request
 def log_request_info():
     logger.info('Headers: %s', request.headers)
-    logger.info('Body: %s', request.get_data())
+    # logger.info('Body: %s', request.get_data()) # Avoid logging sensitive data like passwords
 
 # Database / Auth Config
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET', 'A_VERY_SECRET_KEY_REPLACE_IN_PROD')
@@ -74,10 +63,11 @@ def register():
     password = data.get("password")
 
     if not name or not email or not password:
-        return jsonify({"message": "Name, email and password required"}), 400
-
+        return jsonify({"message": "Name, Email and Password are required"}), 400
+    
+    # Check if user already exists
     if users_collection.find_one({"email": email}):
-        return jsonify({"message": "User already exists"}), 409
+        return jsonify({"message": "User already exists"}), 400
 
     hashed = generate_password_hash(password)
     users_collection.insert_one({

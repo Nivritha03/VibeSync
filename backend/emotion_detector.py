@@ -79,7 +79,7 @@ def detect_emotion_from_image(base64_string):
         if label:
             return {
                 "emotion": label,
-                "confidence": round(conf * 100, 2), # Convert to percentage
+                "confidence": float(round(conf * 100, 2)), # Convert to percentage and ensure float
                 "method": "deepface_inference",
             }
         else:

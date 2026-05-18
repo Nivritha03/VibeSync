@@ -26,7 +26,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Database / Auth Config
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'A_VERY_SECRET_KEY_REPLACE_IN_PROD')
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET', 'A_VERY_SECRET_KEY_REPLACE_IN_PROD')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 
 jwt = JWTManager(app)
@@ -152,16 +152,17 @@ def detect():
             logger.error(f"Failed to save history: {e}")
 
         # Step 4: Determine display emotion
-        display_emotion = emotion.capitalize() if emotion else "Neutral"
+        display_emotion = str(emotion).capitalize() if emotion else "Neutral"
+        num_songs = len(songs) if songs else 0
 
-        logger.info(f"Returning result: {display_emotion} with {len(songs)} songs")
+        logger.info(f"Returning result: {display_emotion} with {num_songs} songs")
 
         return jsonify({
             "emotion": display_emotion,
-            "confidence": float(confidence),
+            "confidence": float(confidence) if confidence is not None else 0.0,
             "detection_method": method,
-            "songs": songs,
-            "song_count": len(songs),
+            "songs": songs if songs else [],
+            "song_count": num_songs,
         })
 
     except Exception as e:

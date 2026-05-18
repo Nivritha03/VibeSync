@@ -1,9 +1,10 @@
 deepface==0.0.100
 tensorflow==2.15.0
+tf-keras==2.15.0
 opencv-python-headless
 flask
 gunicorn
-numpy
+numpy<2
 pandas
 flask-cors
 flask-jwt-extended
@@ -11,5 +12,3 @@ pymongo
 python-dotenv
 requests
 pillow
-scikit-learn
-tf-keras

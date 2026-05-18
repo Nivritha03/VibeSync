@@ -81,7 +81,7 @@ const EmotionDetector = ({ onEmotionDetected }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-6">
+    <div className="w-full px-6 sm:px-12 lg:px-24 py-6">
       <div className="flex flex-col items-center">
         
         {/* Detection Status Header */}

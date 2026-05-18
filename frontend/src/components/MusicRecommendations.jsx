@@ -11,7 +11,7 @@ const MusicRecommendations = ({ songs, emotion }) => {
 
   return (
     <section id="recommendations" className="py-20 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-6 sm:px-16 lg:px-32">
         <div className="mb-12">
           <div className="inline-flex items-center gap-2 mb-2 text-primary font-medium tracking-wide">
             <Music2 className="w-5 h-5" />

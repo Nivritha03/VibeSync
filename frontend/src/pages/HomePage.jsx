@@ -21,7 +21,7 @@ function HomePage({ openAuthModal }) {
     <main className="relative z-10 flex flex-col items-center">
       <Hero onStartClick={handleStartDetecting} />
       
-      <section className="py-20 text-center flex flex-col items-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 text-center flex flex-col items-center w-full px-6 sm:px-16 lg:px-32">
         <h2 className="text-4xl font-bold text-white mb-6">Ready to find your vibe?</h2>
         {user ? (
           <button 

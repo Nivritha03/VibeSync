@@ -42,7 +42,7 @@ const IntegrationSettings = () => {
     <div className="min-h-screen bg-black text-white selection:bg-primary/30">
       <Navbar />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+      <main className="w-full px-6 sm:px-16 lg:px-32 pt-32 pb-20">
         <header className="mb-12">
           <motion.h1 
             initial={{ opacity: 0, x: -20 }}

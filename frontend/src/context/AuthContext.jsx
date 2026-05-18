@@ -9,6 +9,8 @@ export const AuthProvider = ({ children }) => {
 
   // Use environment variable if available (e.g. from Render), otherwise fallback to local dev
   const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000';
+  
+  console.log("Current API_URL:", API_URL);
 
   useEffect(() => {
     const checkAuth = async () => {

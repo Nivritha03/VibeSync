@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 # ─── Flask app & Config ─────────────────────────────────────────────
 app = Flask(__name__)
-CORS(app)
+# Enable CORS for all routes and origins to ensure Vercel -> Render communication works
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Database / Auth Config
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET', 'A_VERY_SECRET_KEY_REPLACE_IN_PROD')

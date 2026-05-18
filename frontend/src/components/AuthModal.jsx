@@ -6,7 +6,7 @@ import { AuthContext } from '../context/AuthContext';
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,7 +18,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     e.preventDefault();
     setError('');
     
-    if (!username || !password) {
+    if (!email || !password) {
       setError('Please fill in all fields');
       return;
     }
@@ -26,13 +26,13 @@ const AuthModal = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
     
     const action = isLogin ? login : register;
-    const result = await action(username, password);
+    const result = await action(email, password);
     
     setIsSubmitting(false);
     
     if (result.success) {
       onClose();
-      setUsername('');
+      setEmail('');
       setPassword('');
       navigate('/app');
     } else {
@@ -103,11 +103,11 @@ const AuthModal = ({ isOpen, onClose }) => {
                         <User className="h-5 w-5 text-gray-500" />
                       </div>
                       <input
-                        type="text"
+                        type="email"
                         className="block w-full pl-10 pr-3 py-3 border border-white/10 rounded-xl bg-surface/50 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Email Address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         onMouseDown={(e) => e.stopPropagation()} // Allow selecting text
                       />
                     </div>

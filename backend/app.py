@@ -52,38 +52,38 @@ history_collection = db["history"]
 @app.route("/auth/register", methods=["POST"])
 def register():
     data = request.json
-    username = data.get("username")
+    email = data.get("email")
     password = data.get("password")
 
-    if not username or not password:
-        return jsonify({"message": "Username and password required"}), 400
+    if not email or not password:
+        return jsonify({"message": "Email and password required"}), 400
 
-    if users_collection.find_one({"username": username}):
+    if users_collection.find_one({"email": email}):
         return jsonify({"message": "User already exists"}), 409
 
     hashed = generate_password_hash(password)
-    users_collection.insert_one({"username": username, "password_hash": hashed})
+    users_collection.insert_one({"email": email, "password_hash": hashed})
 
     return jsonify({"message": "Registration successful"}), 201
 
 @app.route("/auth/login", methods=["POST"])
 def login():
     data = request.json
-    username = data.get("username")
+    email = data.get("email")
     password = data.get("password")
 
-    user = users_collection.find_one({"username": username})
+    user = users_collection.find_one({"email": email})
     if user and check_password_hash(user["password_hash"], password):
-        access_token = create_access_token(identity=username)
-        return jsonify({"access_token": access_token, "username": username}), 200
+        access_token = create_access_token(identity=email)
+        return jsonify({"access_token": access_token, "email": email}), 200
 
     return jsonify({"message": "Invalid credentials"}), 401
 
 @app.route("/auth/me", methods=["GET"])
 @jwt_required()
 def me():
-    current_user = get_jwt_identity()
-    return jsonify({"username": current_user}), 200
+    current_user_email = get_jwt_identity()
+    return jsonify({"email": current_user_email}), 200
 
 
 # ─── Core Application Endpoints ─────────────────────────────────────
@@ -142,10 +142,10 @@ def detect():
 
         # Step 3: Save to history for analytics
         try:
-            current_user = get_jwt_identity()
+            current_user_email = get_jwt_identity()
             if emotion and emotion != "None":
                 history_collection.insert_one({
-                    "username": current_user,
+                    "email": current_user_email,
                     "emotion": emotion.capitalize(),
                     "timestamp": datetime.utcnow()
                 })
@@ -183,10 +183,10 @@ def detect():
 @jwt_required()
 def get_history():
     try:
-        current_user = get_jwt_identity()
+        current_user_email = get_jwt_identity()
         # Get last 50 entries
         history = list(history_collection.find(
-            {"username": current_user},
+            {"email": current_user_email},
             {"_id": 0, "emotion": 1, "timestamp": 1}
         ).sort("timestamp", -1).limit(50))
         

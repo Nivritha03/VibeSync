@@ -55,7 +55,7 @@ const AppPage = () => {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-6xl font-black text-white tracking-tight"
           >
-            Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-neonBlue">{user}</span>
+            Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-neonBlue">{user?.split('@')[0] || user}</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

@@ -7,8 +7,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Use environment variable if available (e.g. from Render), otherwise fallback to local dev
-  const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000';
+  // Use environment variable if available, otherwise fallback to Render URL or local dev
+  const API_URL = import.meta.env.VITE_API_URL || 'https://vibesync-t85c.onrender.com';
   
   console.log("Current API_URL:", API_URL);
 
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
           const res = await axios.get(`${API_URL}/auth/me`, {
             headers: { Authorization: `Bearer ${token}` }
           });
-          setUser(res.data.username);
+          setUser(res.data.email);
         } catch (error) {
           console.error("Token invalid or expired", error);
           localStorage.removeItem('token');
@@ -29,24 +29,24 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     checkAuth();
-  }, []);
+  }, [API_URL]);
 
-  const login = async (username, password) => {
+  const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, { username, password });
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
       localStorage.setItem('token', res.data.access_token);
-      setUser(res.data.username);
+      setUser(res.data.email);
       return { success: true };
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Login failed' };
     }
   };
 
-  const register = async (username, password) => {
+  const register = async (email, password) => {
     try {
-      await axios.post(`${API_URL}/auth/register`, { username, password });
+      await axios.post(`${API_URL}/auth/register`, { email, password });
       // Log them in immediately after register
-      return await login(username, password);
+      return await login(email, password);
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Registration failed' };
     }

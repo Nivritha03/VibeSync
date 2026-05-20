@@ -5,6 +5,7 @@ from flask_cors import CORS
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -29,8 +30,10 @@ CORS(
     resources={
         r"/*": {
             "origins": [
-                "https://vibe-sync-ebon.vercel.app",
-                "http://localhost:5173"
+                re.compile(r"https://.*\.vercel\.app"),
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+                "*" # We can fallback to star if no credentials, but we need support_credentials. We rely on the regex.
             ]
         }
     },
@@ -65,8 +68,8 @@ users_collection = db["users"]
 history_collection = db["history"]
 
 # ─── Auth Endpoints ─────────────────────────────────────────────────
-@app.route("/signup", methods=["POST", "OPTIONS"])
-@app.route("/auth/register", methods=["POST", "OPTIONS"]) # Keep alias for backward compat
+@app.route("/signup", methods=["POST"])
+@app.route("/auth/register", methods=["POST"]) # Keep alias for backward compat
 def register():
     print("Signup route hit")
     try:
@@ -109,8 +112,8 @@ def register():
             "error": str(e)
         }), 500
 
-@app.route("/login", methods=["POST", "OPTIONS"])
-@app.route("/auth/login", methods=["POST", "OPTIONS"])
+@app.route("/login", methods=["POST"])
+@app.route("/auth/login", methods=["POST"])
 def login():
     print("Login route hit")
     try:
@@ -147,8 +150,8 @@ def login():
             "error": str(e)
         }), 500
 
-@app.route("/profile", methods=["GET", "OPTIONS"])
-@app.route("/auth/me", methods=["GET", "OPTIONS"])
+@app.route("/profile", methods=["GET"])
+@app.route("/auth/me", methods=["GET"])
 @jwt_required()
 def me():
     current_user_email = get_jwt_identity()
@@ -183,7 +186,7 @@ def health():
     return jsonify({"status": "healthy"})
 
 
-@app.route("/detect-emotion", methods=["POST", "OPTIONS"])
+@app.route("/detect-emotion", methods=["POST"])
 @jwt_required()
 def detect():
     try:
@@ -256,7 +259,7 @@ def detect():
         }), 500
 
 
-@app.route("/analytics/history", methods=["GET", "OPTIONS"])
+@app.route("/analytics/history", methods=["GET"])
 @jwt_required()
 def get_history():
     try:

@@ -1,9 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Heart, Music2, MoreHorizontal, Pause } from 'lucide-react';
 
 const MusicRecommendations = ({ songs, emotion }) => {
   const [playingIndex, setPlayingIndex] = useState(null);
+  const audioRef = useRef(null);
+
+  // Initialize audio object once
+  if (!audioRef.current && typeof Audio !== "undefined") {
+    audioRef.current = new Audio();
+  }
+
+  // Handle audio playback when playingIndex changes
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (playingIndex !== null && songs[playingIndex]) {
+      audio.src = songs[playingIndex].audio;
+      audio.play().catch(err => console.error("Playback failed:", err));
+      audio.onended = () => setPlayingIndex(null);
+    } else {
+      audio.pause();
+    }
+
+    return () => {
+      audio.pause();
+    };
+  }, [playingIndex, songs]);
+
+  // Reset playing state if songs change
+  useEffect(() => {
+    setPlayingIndex(null);
+  }, [songs]);
 
   if (!songs || songs.length === 0) {
     return null; // Don't render until we have songs
